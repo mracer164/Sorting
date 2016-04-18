@@ -6,7 +6,7 @@
 
 using namespace std;
 using namespace std::chrono;
-long int ARRAY_SIZE = 32000;
+long int ARRAY_SIZE = 128000;
 int * bubbleSort(int * toSort, int size)
 {
 	int temp;
@@ -165,34 +165,62 @@ int * insertionSortOneAssignment(int * toSort, int size)
 		}
 	return toSort;
 	}
-int * shellSort(int * toSort, int size)
+int * shellSortCiura(int * toSort, int size)
 {
 	int gaps[] = { 701, 301, 132, 57, 23, 10, 4, 1 };
 	int gapsLength = 8;
 	int temp;
-	int index;
-		//# Start with the largest gap and work down to a gap of 1
-		for(int gap = 0;gap < gapsLength;gap++)
+	int j;
+		
+	for(int gap = 0;gap < gapsLength;gap++)
 	{
-		// Do a gapped insertion sort for this gap size.
-			//# The first gap elements a[0..gap - 1] are already in gapped order
-			//# keep adding one more element until the entire array is gap sorted
 			for (int i = gaps[gap]; i < size; i++)
 			{
-				//# add a[i] to the elements that have been gap sorted
-					//# save a[i] in temp and make a hole at position i
+				
 				temp = toSort[i];
-					//# shift earlier gap - sorted elements up until the correct location for a[i] is found
-					for (int j = i; (j >= gaps[gap]) && (toSort[j - gaps[gap]] > temp); j -= gaps[gap])
+					for (j = i; (j >= gaps[gap]) && (toSort[j - gaps[gap]] > temp); j -= gaps[gap])
 					{
 						toSort[j] = toSort[j - gaps[gap]];
-						index = j;
+						
 					}
-				//# put temp(the original a[i]) in its correct location
-					toSort[index] = temp;
+					toSort[j] = temp;
 			}
 	}
 		return toSort;
+}
+int * shellSortShell(int * toSort, int size)
+{
+	int gaps[22];
+	int gapsLength;
+	int temp;
+	int gaps_iterator = 0;
+	int k = 1;
+	int j;
+	int shellGap;
+	while (gaps[gaps_iterator-1] != 1)
+	{
+		gaps[gaps_iterator] = round(size / (pow(2, k)));
+		k++;
+		gaps_iterator++;
+
+	}
+	gapsLength = gaps_iterator;
+
+	for (int gap = 0; gap < gapsLength; gap++)
+	{
+		for (int i = gaps[gap]; i < size; i++)
+		{
+
+			temp = toSort[i];
+			for (j = i; (j >= gaps[gap]) && (toSort[j - gaps[gap]] > temp); j -= gaps[gap])
+			{
+				toSort[j] = toSort[j - gaps[gap]];
+
+			}
+			toSort[j] = temp;
+		}
+	}
+	return toSort;
 }
 
 
@@ -206,13 +234,13 @@ int main()
 	}
 	cout << "BubbleSort: ";
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-	bubbleSort(toSort, ARRAY_SIZE);
+	//bubbleSort(toSort, ARRAY_SIZE);
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 
 	auto duration = duration_cast<microseconds>(t2 - t1).count();
 	float time = duration / (float)1000;
 	cout << time << "ms" << endl;
-	for (int i = 0; i < ARRAY_SIZE; i++)
+	/*for (int i = 0; i < ARRAY_SIZE; i++)
 	{
 		toSort[i] = rand();
 	}
@@ -271,14 +299,26 @@ int main()
 
 	duration = duration_cast<microseconds>(t2 - t1).count();
 	time = duration / (float)1000;
+	cout << time << "ms" << endl;*/
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		toSort[i] = rand();
+	}
+	cout << "ShellSortCiura: ";
+	t1 = high_resolution_clock::now();
+	shellSortCiura(toSort, ARRAY_SIZE);
+	t2 = high_resolution_clock::now();
+
+	duration = duration_cast<microseconds>(t2 - t1).count();
+	time = duration / (float)1000;
 	cout << time << "ms" << endl;
 	for (int i = 0; i < ARRAY_SIZE; i++)
 	{
 		toSort[i] = rand();
 	}
-	cout << "ShellSort: ";
+	cout << "ShellSortShell: ";
 	t1 = high_resolution_clock::now();
-	shellSort(toSort, ARRAY_SIZE);
+	shellSortShell(toSort, ARRAY_SIZE);
 	t2 = high_resolution_clock::now();
 
 	duration = duration_cast<microseconds>(t2 - t1).count();
