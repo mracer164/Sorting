@@ -131,9 +131,45 @@ int * selectionSort(int * toSort, int size)
 	return toSort;
 
 }
+int * insertionSort(int * toSort, int size)
+{
+	int temp;
+	for (int i = 1; i < size; i++)
+	{
+		int j = i;
+		while (j > 0 && toSort[j - 1] > toSort[j])
+		{
+			temp = toSort[j];
+			toSort[j] = toSort[j - 1];
+			toSort[j - 1] = temp;
+			//swap(toSort[j], toSort[j - 1]);
+				j = j - 1;
+		}
+	}
+	return toSort;
+}
+int * insertionSortOneAssignment(int * toSort, int size)
+{
+	int temp;
+	int j;
+	for (int i = 2; i < size; i++)
+	{
+		temp = toSort[i];
+			j = i - 1;
+		while ((j > 0) && (toSort[j] > temp))
+		{
+			toSort[j + 1] = toSort[j];
+			j = j - 1;
+		}
+				toSort[j + 1] = temp;
+		}
+	return toSort;
+	}
+
+
 int main()
 {
-	srand(time(NULL));
+	srand((int)time(NULL));
 	int toSort[ARRAY_SIZE];
 	for (int i = 0; i < ARRAY_SIZE; i++)
 	{
@@ -178,6 +214,30 @@ int main()
 	cout << "SelectionSort: ";
 	t1 = high_resolution_clock::now();
 	selectionSort(toSort, ARRAY_SIZE);
+	t2 = high_resolution_clock::now();
+
+	duration = duration_cast<microseconds>(t2 - t1).count();
+	time = duration / (float)1000;
+	cout << time << "ms" << endl;
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		toSort[i] = rand();
+	}
+	cout << "InsertionSort: ";
+	t1 = high_resolution_clock::now();
+	insertionSort(toSort, ARRAY_SIZE);
+	t2 = high_resolution_clock::now();
+
+	duration = duration_cast<microseconds>(t2 - t1).count();
+	time = duration / (float)1000;
+	cout << time << "ms" << endl;
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		toSort[i] = rand();
+	}
+	cout << "InsertionSortwith one assignment: ";
+	t1 = high_resolution_clock::now();
+	insertionSortOneAssignment(toSort, ARRAY_SIZE);
 	t2 = high_resolution_clock::now();
 
 	duration = duration_cast<microseconds>(t2 - t1).count();
