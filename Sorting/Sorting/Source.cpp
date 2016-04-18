@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <ctime>
@@ -222,6 +222,72 @@ int * shellSortShell(int * toSort, int size)
 	}
 	return toSort;
 }
+int partitionLeftmost(int tablica[], int p, int r) 
+{
+	int x = tablica[p]; 
+	int i = p, j = r, w; 
+	while (true) 
+	{
+		while (tablica[j] > x) 
+			j--;
+		while (tablica[i] < x) 
+			i++;
+		if (i < j) 
+		{
+			w = tablica[i];
+			tablica[i] = tablica[j];
+			tablica[j] = w;
+			i++;
+			j--;
+		}
+		else 
+			return j;
+	}
+}
+void quickSortLeftmost(int tablica[], int p, int r) 
+{
+	int q;
+	if (p < r)
+	{
+		q = partitionLeftmost(tablica, p, r); 
+		quickSortLeftmost(tablica, p, q); 
+		quickSortLeftmost(tablica, q + 1, r); 
+	}
+}
+int partitionMiddle(int tablica[], int p, int r)
+{
+	int x = tablica[(p+r)/2];
+	int i = p, j = r, w;
+	while (true)
+	{
+		while (tablica[j] > x)
+			j--;
+		while (tablica[i] < x)
+			i++;
+		if (i < j)
+		{
+			w = tablica[i];
+			tablica[i] = tablica[j];
+			tablica[j] = w;
+			i++;
+			j--;
+		}
+		else
+			return j;
+	}
+}
+void quickSortMiddle(int tablica[], int p, int r)
+{
+	int q;
+	if (p < r)
+	{
+		q = partitionMiddle(tablica, p, r);
+		quickSortMiddle(tablica, p, q);
+		quickSortMiddle(tablica, q + 1, r);
+	}
+}
+	
+	
 
 
 int main()
@@ -319,6 +385,30 @@ int main()
 	cout << "ShellSortShell: ";
 	t1 = high_resolution_clock::now();
 	shellSortShell(toSort, ARRAY_SIZE);
+	t2 = high_resolution_clock::now();
+
+	duration = duration_cast<microseconds>(t2 - t1).count();
+	time = duration / (float)1000;
+	cout << time << "ms" << endl;
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		toSort[i] = rand();
+	}
+	cout << "QuickSort leftmost as pivot: ";
+	t1 = high_resolution_clock::now();
+	quickSortLeftmost(toSort,0,ARRAY_SIZE-1);
+	t2 = high_resolution_clock::now();
+
+	duration = duration_cast<microseconds>(t2 - t1).count();
+	time = duration / (float)1000;
+	cout << time << "ms" << endl;
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		toSort[i] = rand();
+	}
+	cout << "QuickSort middle as pivot: ";
+	t1 = high_resolution_clock::now();
+	quickSortMiddle(toSort, 0, ARRAY_SIZE - 1);
 	t2 = high_resolution_clock::now();
 
 	duration = duration_cast<microseconds>(t2 - t1).count();
