@@ -526,15 +526,6 @@ void coctailShakerSort(char ** toSort, int size)
 
 		}
 
-		/*for (int i = 0; i < ARRAY_SIZE; i++)
-		{
-			for (int j = 0; j < stringLength; j++)
-			{
-				cout << toSort[i][j];
-			}
-			cout << endl;
-		}
-		cout << endl;*/
 	}
 	
 }
@@ -651,14 +642,7 @@ void shellSortCiura(char ** toSort, int size)
 			copyString(toSort[j],temp,stringLength);
 		}
 	}
-	/*for (int i = 0; i < ARRAY_SIZE; i++)
-	{
-		for (int j = 0; j < stringLength; j++)
-		{
-			cout << toSort[i][j];
-		}
-		cout << endl;
-	}*/
+	
 }
 void shellSortShell(char ** toSort, int size)
 {
@@ -826,7 +810,7 @@ int main()
 	high_resolution_clock::time_point t2;
 	srand((int)time(NULL));
 	
-	/*cout << "Slow sorting algorithms - integers" << endl;
+	cout << "Slow sorting algorithms - integers" << endl;
 	for (int i = 0; i < 5; i++)
 	{
 		ARRAY_SIZE = noOfIntsSlow[i];
@@ -943,8 +927,8 @@ int main()
 		cout << overallTime / 3 << "ms" << endl;
 		overallTime = 0;
 		checkIfSorted(toSort, ARRAY_SIZE);
-	}*/
-	/*cout << "Fast sorting algorithms - integers" << endl;
+	}
+	cout << "Fast sorting algorithms - integers" << endl;
 	for (int i = 0; i < 5; i++)
 	{
 		ARRAY_SIZE = noOfIntsFast[i];
@@ -1064,7 +1048,7 @@ int main()
 		cout << overallTime / 3 << "ms" << endl;
 		overallTime = 0;
 		checkIfSorted(toSort, ARRAY_SIZE);
-	}*/
+	}
 
 	cout << "Slow sorting algorithms - strings" << endl;
 	for (int i = 0; i < 5; i++)
@@ -1073,11 +1057,11 @@ int main()
 		ARRAY_SIZE = noOfStringsSlow[i];
 		cout << "No of strings: " << ARRAY_SIZE << endl << endl;
 
-		/*cout << "Selection sort: ";
+		cout << "Selection sort: ";
 		for (int j = 0; j < 3; j++)
 		{
 			toSort = generateStrings(ARRAY_SIZE, stringLength);
-			checkIfSorted(toSort, ARRAY_SIZE);
+			
 			t1 = high_resolution_clock::now();
 			selectionSort(toSort, ARRAY_SIZE);
 			t2 = high_resolution_clock::now();
@@ -1087,7 +1071,7 @@ int main()
 		}
 		cout << overallTime / 3 << "ms" << endl;
 		overallTime = 0;
-		checkIfSorted(toSort, ARRAY_SIZE);*/
+		checkIfSorted(toSort, ARRAY_SIZE);
 		
 		cout << "Insertion sort: ";
 		for (int j = 0; j < 3; j++)
@@ -1157,15 +1141,6 @@ int main()
 		for (int j = 0; j < 3; j++)
 		{
 			toSort = generateStrings(ARRAY_SIZE, stringLength);
-			/*
-			for (int i = 0; i < ARRAY_SIZE; i++)
-			{
-				for (int j = 0; j < stringLength; j++)
-				{
-					cout << toSort[i][j];
-				}
-				cout << endl;
-			}*/
 			cout << endl;
 			t1 = high_resolution_clock::now();
 			coctailShakerSort(toSort, ARRAY_SIZE);
@@ -1174,15 +1149,6 @@ int main()
 			overallTime = overallTime + duration / (float)1000;
 
 		}
-		/*for (int i = 0; i < ARRAY_SIZE; i++)
-		{
-			for (int j = 0; j < stringLength; j++)
-			{
-				cout << toSort[i][j];
-			}
-			cout << endl;
-		}
-		cout << endl;*/
 		cout << overallTime / 3 << "ms" << endl;
 		overallTime = 0;
 		checkIfSorted(toSort, ARRAY_SIZE);
@@ -1249,26 +1215,10 @@ int main()
 		for (int j = 0; j < 3; j++)
 		{
 			toSort = generateStrings(ARRAY_SIZE, stringLength);
-			/*for (int i = 0; i < ARRAY_SIZE; i++)
-			{
-			for (int j = 0; j < stringLength; j++)
-			{
-			cout << toSort[i][j];
-			}
-			cout << endl;
-			}
-			cout << endl;*/
+			
 			t1 = high_resolution_clock::now();
 			quickSortWithInsertion(toSort,0, ARRAY_SIZE-1);
-			/*for (int i = 0; i < ARRAY_SIZE; i++)
-			{
-			for (int j = 0; j < stringLength; j++)
-			{
-			cout << toSort[i][j];
-			}
-			cout << endl;
-			}
-			cout << endl;*/
+			
 			t2 = high_resolution_clock::now();
 			duration = duration_cast<microseconds>(t2 - t1).count();
 			overallTime = overallTime + duration / (float)1000;
