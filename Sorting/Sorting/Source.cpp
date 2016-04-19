@@ -1,4 +1,5 @@
-﻿#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <ctime>
@@ -363,6 +364,13 @@ void checkIfSorted(int table[], int size)
 	}
 }
 //string sorting
+void copyString(char * destination, char * source,int length)
+{
+	for (int i = 0; i < length; i++)
+	{
+		destination[i] = source[i];
+	}
+}
 char ** generateStrings(int noOfStrings, int stringLength)
 {
 	char ** stringTable = new char*[noOfStrings];
@@ -389,43 +397,76 @@ bool checkIfBigger(char * string1, char * string2, int stringLength)
 			if (string1[i] > string2[i])
 			{
 				bigger = true;
-				return bigger;
+				break;
+				
 			}
 			else if (string1[i] == string2[i])
 			{
-				continue;
+				bigger = false;
+			}
+			else if ((string1[i] == string2[i]) && (i == (stringLength - 1)))
+			{
+				bigger = false;
 			}
 			else
 			{
 				bigger = false;
-				return bigger;
+				break;
 			}
+			
 
 		}
-		
+		return bigger;
 
 }
 bool checkIfSmaller(char * string1, char * string2, int stringLength)
 {
 	bool smaller = false;
-	for (int i = 0; i < stringLength; i++)
+	for (int i = 0;(( i < stringLength)); i++)
 	{
 		if (string1[i] < string2[i])
 		{
 			smaller = true;
-			return smaller;
+			break;
+			
 		}
 		else if (string1[i] == string2[i])
 		{
-			continue;
+			smaller = false;
+		}
+		else if ((string1[i] == string2[i]) && (i == (stringLength - 1)))
+		{
+			smaller = false;
+			
 		}
 		else
 		{
 			smaller = false;
-			return smaller;
+			break;
+			
 		}
 	}
-	
+	return smaller;
+}
+void checkIfSorted(char ** toCheck, int size)
+{
+	bool sorted = true;
+	for (int i = 0; i < size - 1; i++)
+	{
+		if (checkIfSmaller(toCheck[i + 1],toCheck[i],stringLength))
+		{
+			sorted = false;
+			break;
+		}
+	}
+	if (sorted)
+	{
+		cout << "Table is sorted" << endl;
+	}
+	else
+	{
+		cout << "Table is unsorted" << endl;
+	}
 }
 void swapStrings(char * string1, char * string2, int stringLength)
 {
@@ -458,43 +499,46 @@ void bubbleSort(char ** toSort, int size)
 	}
 	
 }
-void coctailShakerSort(char * toSort, int size)
+void coctailShakerSort(char ** toSort, int size)
 {
 	int temp;
 	bool unsorted = true;
 	while (unsorted)
 	{
 		unsorted = false;
-		for (int i = 0; i < size - 1; i++)
+		for (int i = 0; i < size - 2; i++)
 		{
-			if (toSort[i] > toSort[i + 1])
+			if (checkIfBigger(toSort[i],toSort[i + 1],stringLength))
 			{
-				temp = toSort[i + 1];
-				toSort[i + 1] = toSort[i];
-				toSort[i] = temp;
+				swapStrings(toSort[i + 1], toSort[i], stringLength);
 				unsorted = true;
 
 			}
 
 		}
-		for (int i = size - 1; i >= 0; i--)
+		for (int i = size - 2; i >= 0; i--)
 		{
-			if (toSort[i] > toSort[i + 1])
+			if (checkIfBigger(toSort[i], toSort[i + 1], stringLength))
 			{
-				temp = toSort[i + 1];
-				toSort[i + 1] = toSort[i];
-				toSort[i] = temp;
+				swapStrings(toSort[i + 1], toSort[i], stringLength);
 				unsorted = true;
-
 			}
 
 		}
 
-
+		/*for (int i = 0; i < ARRAY_SIZE; i++)
+		{
+			for (int j = 0; j < stringLength; j++)
+			{
+				cout << toSort[i][j];
+			}
+			cout << endl;
+		}
+		cout << endl;*/
 	}
 	
 }
-void bubbleSortLastChange(char * toSort, int size)
+void bubbleSortLastChange(char ** toSort, int size)
 {
 	int temp;
 	int lastChange = 0;
@@ -507,11 +551,9 @@ void bubbleSortLastChange(char * toSort, int size)
 		unsorted = false;
 		for (int i = 0; i < togo; i++)
 		{
-			if (toSort[i] > toSort[i + 1])
+			if (checkIfBigger(toSort[i],toSort[i + 1],stringLength))
 			{
-				temp = toSort[i + 1];
-				toSort[i + 1] = toSort[i];
-				toSort[i] = temp;
+				swapStrings(toSort[i], toSort[i + 1], stringLength);
 				unsorted = true;
 
 				lastChange = i;
@@ -529,7 +571,7 @@ void bubbleSortLastChange(char * toSort, int size)
 	}
 	
 }
-void selectionSort(char * toSort, int size)
+void selectionSort(char ** toSort, int size)
 {
 	int temp;
 
@@ -543,61 +585,56 @@ void selectionSort(char * toSort, int size)
 
 		for (i = j + 1; i < size; i++) {
 
-			if (toSort[i] < toSort[iMin]) {
+			if (checkIfSmaller(toSort[i],toSort[iMin],stringLength)) 
+			{
 
 				iMin = i;
 			}
 		}
 
 		if (iMin != j) {
-			//swap(toSort[j], toSort[iMin]);
-			temp = toSort[j];
-			toSort[j] = toSort[iMin];
-			toSort[iMin] = temp;
+			swapStrings(toSort[j], toSort[iMin], stringLength);
 		}
 	}
 	
 
 }
-void insertionSort(char * toSort, int lo, int hi)
+void insertionSort(char ** toSort, int lo, int hi)
 {
 	int temp;
 	for (int i = lo + 1; i < hi; i++)
 	{
 		int j = i;
-		while (j > 0 && toSort[j - 1] > toSort[j])
+		while (j > 0 && checkIfBigger(toSort[j - 1],toSort[j],stringLength))
 		{
-			temp = toSort[j];
-			toSort[j] = toSort[j - 1];
-			toSort[j - 1] = temp;
-			//swap(toSort[j], toSort[j - 1]);
+			swapStrings(toSort[j], toSort[j - 1],stringLength);
 			j = j - 1;
 		}
 	}
 	
 }
-void insertionSortOneAssignment(char toSort[], int size)
+void insertionSortOneAssignment(char ** toSort, int size)
 {
-	int temp;
+	char * temp = new char[stringLength];
 	int j;
 	for (int i = 1; i < size; i++)
 	{
-		temp = toSort[i];
+		copyString(temp,toSort[i],stringLength);
 		j = i - 1;
-		while ((j >= 0) && (toSort[j] > temp))
+		while ((j >= 0) && checkIfBigger(toSort[j],temp,stringLength))
 		{
-			toSort[j + 1] = toSort[j];
+			copyString(toSort[j + 1],toSort[j],stringLength);
 			j = j - 1;
 		}
-		toSort[j + 1] = temp;
+		copyString(toSort[j + 1],temp,stringLength);
 	}
 
 }
-void shellSortCiura(char * toSort, int size)
+void shellSortCiura(char ** toSort, int size)
 {
 	int gaps[] = { 701, 301, 132, 57, 23, 10, 4, 1 };
 	int gapsLength = 8;
-	int temp;
+	char * temp = new char[stringLength];
 	int j;
 
 	for (int gap = 0; gap < gapsLength; gap++)
@@ -605,22 +642,29 @@ void shellSortCiura(char * toSort, int size)
 		for (int i = gaps[gap]; i < size; i++)
 		{
 
-			temp = toSort[i];
-			for (j = i; (j >= gaps[gap]) && (toSort[j - gaps[gap]] > temp); j -= gaps[gap])
+			copyString(temp,toSort[i],stringLength);
+			for (j = i; (j >= gaps[gap]) && (checkIfBigger(toSort[j - gaps[gap]],temp,stringLength)); j -= gaps[gap])
 			{
-				toSort[j] = toSort[j - gaps[gap]];
+				copyString(toSort[j], toSort[j - gaps[gap]],stringLength);
 
 			}
-			toSort[j] = temp;
+			copyString(toSort[j],temp,stringLength);
 		}
 	}
-
+	/*for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		for (int j = 0; j < stringLength; j++)
+		{
+			cout << toSort[i][j];
+		}
+		cout << endl;
+	}*/
 }
-void shellSortShell(char * toSort, int size)
+void shellSortShell(char ** toSort, int size)
 {
 	int gaps[22];
 	int gapsLength;
-	int temp;
+	char * temp = new char[stringLength];
 	int gaps_iterator = 0;
 	int k = 1;
 	int j;
@@ -639,32 +683,31 @@ void shellSortShell(char * toSort, int size)
 		for (int i = gaps[gap]; i < size; i++)
 		{
 
-			temp = toSort[i];
-			for (j = i; (j >= gaps[gap]) && (toSort[j - gaps[gap]] > temp); j -= gaps[gap])
+			copyString(temp, toSort[i], stringLength);
+			for (j = i; (j >= gaps[gap]) && (checkIfBigger(toSort[j - gaps[gap]], temp, stringLength)); j -= gaps[gap])
 			{
-				toSort[j] = toSort[j - gaps[gap]];
+				copyString(toSort[j], toSort[j - gaps[gap]], stringLength);
 
 			}
-			toSort[j] = temp;
+			copyString(toSort[j], temp, stringLength);
 		}
 	}
 	
 }
-int partitionLeftmost(char tablica[], int p, int r)
+int partitionLeftmost(char ** tablica, int p, int r)
 {
-	int x = tablica[p];
-	int i = p, j = r, w;
+	char * x = new char[stringLength];
+	copyString(x,tablica[p],stringLength);
+	int i = p, j = r;
 	while (true)
 	{
-		while (tablica[j] > x)
+		while (checkIfBigger(tablica[j],x,stringLength))
 			j--;
-		while (tablica[i] < x)
+		while (checkIfSmaller(tablica[i],x,stringLength))
 			i++;
 		if (i < j)
 		{
-			w = tablica[i];
-			tablica[i] = tablica[j];
-			tablica[j] = w;
+			swapStrings(tablica[i], tablica[j], stringLength);
 			i++;
 			j--;
 		}
@@ -672,7 +715,7 @@ int partitionLeftmost(char tablica[], int p, int r)
 			return j;
 	}
 }
-void quickSortLeftmost(char tablica[], int p, int r)
+void quickSortLeftmost(char ** tablica, int p, int r)
 {
 	int q;
 	if (p < r)
@@ -682,21 +725,20 @@ void quickSortLeftmost(char tablica[], int p, int r)
 		quickSortLeftmost(tablica, q + 1, r);
 	}
 }
-int partitionMiddle(char tablica[], int p, int r)
+int partitionMiddle(char ** tablica, int p, int r)
 {
-	int x = tablica[(p + r) / 2];
-	int i = p, j = r, w;
+	char * x = new char[stringLength];
+	copyString(x, tablica[(p + r) / 2], stringLength);
+	int i = p, j = r;
 	while (true)
 	{
-		while (tablica[j] > x)
+		while (checkIfBigger(tablica[j], x, stringLength))
 			j--;
-		while (tablica[i] < x)
+		while (checkIfSmaller(tablica[i], x, stringLength))
 			i++;
 		if (i < j)
 		{
-			w = tablica[i];
-			tablica[i] = tablica[j];
-			tablica[j] = w;
+			swapStrings(tablica[i], tablica[j], stringLength);
 			i++;
 			j--;
 		}
@@ -704,7 +746,7 @@ int partitionMiddle(char tablica[], int p, int r)
 			return j;
 	}
 }
-void quickSortMiddle(char tablica[], int p, int r)
+void quickSortMiddle(char ** tablica, int p, int r)
 {
 	int q;
 	if (p < r)
@@ -714,21 +756,20 @@ void quickSortMiddle(char tablica[], int p, int r)
 		quickSortMiddle(tablica, q + 1, r);
 	}
 }
-int partitionRandom(char tablica[], int p, int r)
+int partitionRandom(char ** tablica, int p, int r)
 {
-	int x = tablica[(rand() % ((r - p) + 1) + p)];
-	int i = p, j = r, w;
+	char * x = new char[stringLength];
+	copyString(x, tablica[(rand() % ((r - p) + 1) + p)], stringLength);
+	int i = p, j = r;
 	while (true)
 	{
-		while (tablica[j] > x)
+		while (checkIfBigger(tablica[j], x, stringLength))
 			j--;
-		while (tablica[i] < x)
+		while (checkIfSmaller(tablica[i], x, stringLength))
 			i++;
 		if (i < j)
 		{
-			w = tablica[i];
-			tablica[i] = tablica[j];
-			tablica[j] = w;
+			swapStrings(tablica[i], tablica[j], stringLength);
 			i++;
 			j--;
 		}
@@ -736,7 +777,7 @@ int partitionRandom(char tablica[], int p, int r)
 			return j;
 	}
 }
-void quickSortRandom(char tablica[], int p, int r)
+void quickSortRandom(char ** tablica, int p, int r)
 {
 	int q;
 	if (p < r)
@@ -746,7 +787,7 @@ void quickSortRandom(char tablica[], int p, int r)
 		quickSortRandom(tablica, q + 1, r);
 	}
 }
-void quickSortWithInsertion(char tablica[], int p, int r)
+void quickSortWithInsertion(char ** tablica, int p, int r)
 {
 	int q;
 	if (p < r)
@@ -769,34 +810,14 @@ void quickSortWithInsertion(char tablica[], int p, int r)
 		}
 	}
 }
-void checkIfSorted(char table[], int size)
-{
-	bool sorted = true;
-	for (int i = 0; i < size - 1; i++)
-	{
-		if (table[i + 1] < table[i])
-		{
-			sorted = false;
-			break;
-		}
-	}
-	if (sorted)
-	{
-		cout << "Table is sorted" << endl;
-	}
-	else
-	{
-		cout << "Table is unsorted" << endl;
-	}
-}
-	
+
 
 
 int main()
 {
 	int noOfIntsSlow[5] = { 8000,16000,32000,64000,128000 };
 	int noOfIntsFast[5] = { 128000,512000,1024000,2048000,4096000 };
-	int noOfStringsSlow[5] = { 20,4000,8000,16000,32000 };
+	int noOfStringsSlow[5] = { 2000,4000,8000,16000,32000 };
 	int noOfStringsFast[5] = { 32000,64000,128000,512000,1024000 };
 	float overallTime = 0;
 
@@ -1044,18 +1065,67 @@ int main()
 		overallTime = 0;
 		checkIfSorted(toSort, ARRAY_SIZE);
 	}*/
+
 	cout << "Slow sorting algorithms - strings" << endl;
 	for (int i = 0; i < 5; i++)
 	{
 		char ** toSort;
 		ARRAY_SIZE = noOfStringsSlow[i];
+		cout << "No of strings: " << ARRAY_SIZE << endl << endl;
+
+		/*cout << "Selection sort: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+			checkIfSorted(toSort, ARRAY_SIZE);
+			t1 = high_resolution_clock::now();
+			selectionSort(toSort, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);*/
 		
-		
+		cout << "Insertion sort: ";
 		for (int j = 0; j < 3; j++)
 		{
 			toSort = generateStrings(ARRAY_SIZE, stringLength);
 			
+			t1 = high_resolution_clock::now();
+			insertionSort(toSort,0, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
 
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Insertion sort with one assignment: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+			
+			t1 = high_resolution_clock::now();
+			insertionSortOneAssignment(toSort, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Bubble sort: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+		
 			t1 = high_resolution_clock::now();
 			bubbleSort(toSort, ARRAY_SIZE);
 			t2 = high_resolution_clock::now();
@@ -1065,9 +1135,182 @@ int main()
 		}
 		cout << overallTime / 3 << "ms" << endl;
 		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Bubble sort last change: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+		
+			t1 = high_resolution_clock::now();
+			bubbleSortLastChange(toSort, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Coctail shaker sort: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+			/*
+			for (int i = 0; i < ARRAY_SIZE; i++)
+			{
+				for (int j = 0; j < stringLength; j++)
+				{
+					cout << toSort[i][j];
+				}
+				cout << endl;
+			}*/
+			cout << endl;
+			t1 = high_resolution_clock::now();
+			coctailShakerSort(toSort, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		/*for (int i = 0; i < ARRAY_SIZE; i++)
+		{
+			for (int j = 0; j < stringLength; j++)
+			{
+				cout << toSort[i][j];
+			}
+			cout << endl;
+		}
+		cout << endl;*/
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
 		
 	}
 
+	cout << "Fast sorting algorithms - strings" << endl;
+	for (int i = 0; i < 5; i++)
+	{
+		char ** toSort;
+		ARRAY_SIZE = noOfStringsFast[i];
+		cout << "No of strings: " << ARRAY_SIZE << endl << endl;
+
+		cout << "Quicksort leftmost: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+
+			t1 = high_resolution_clock::now();
+			quickSortLeftmost(toSort,0, ARRAY_SIZE-1);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Quicksort middle: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+
+			t1 = high_resolution_clock::now();
+			quickSortMiddle(toSort, 0, ARRAY_SIZE-1);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Quicksort random: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+
+			t1 = high_resolution_clock::now();
+			quickSortRandom(toSort,0, ARRAY_SIZE-1);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+		
+
+		cout << "Quicksort with insertion: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+			/*for (int i = 0; i < ARRAY_SIZE; i++)
+			{
+			for (int j = 0; j < stringLength; j++)
+			{
+			cout << toSort[i][j];
+			}
+			cout << endl;
+			}
+			cout << endl;*/
+			t1 = high_resolution_clock::now();
+			quickSortWithInsertion(toSort,0, ARRAY_SIZE-1);
+			/*for (int i = 0; i < ARRAY_SIZE; i++)
+			{
+			for (int j = 0; j < stringLength; j++)
+			{
+			cout << toSort[i][j];
+			}
+			cout << endl;
+			}
+			cout << endl;*/
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Shellsort Ciura: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+
+			t1 = high_resolution_clock::now();
+			shellSortCiura(toSort, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+		cout << "Shellsort Shell: ";
+		for (int j = 0; j < 3; j++)
+		{
+			toSort = generateStrings(ARRAY_SIZE, stringLength);
+
+			t1 = high_resolution_clock::now();
+			shellSortShell(toSort, ARRAY_SIZE);
+			t2 = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(t2 - t1).count();
+			overallTime = overallTime + duration / (float)1000;
+
+		}
+		cout << overallTime / 3 << "ms" << endl;
+		overallTime = 0;
+		checkIfSorted(toSort, ARRAY_SIZE);
+
+	}
 
 	system("pause");
 	return 0;
